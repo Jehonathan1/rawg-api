@@ -1,22 +1,19 @@
 import express from 'express';
 import axios from 'axios';
-import cors from 'cors'; // Don't forget to install this package if you haven't
+import cors from 'cors';
 
 const app = express();
-app.use(cors()); // Enable CORS for all routes
+app.use(cors());
 
-// Ensure the API key is set
-if (!process.env.VITE_GAMES_API_KEY) {
-    console.error("Environment variable GAMES_API_KEY is not set");
-    process.exit(1);
-}
-const KEY = process.env.GAMES_API_KEY;
+// Access the API key using import.meta.env
+const KEY = process.env.VITE_GAMES_API_KEY;
 
 const fetchFromRawg = async (url, req, res) => {
   try {
     const response = await axios.get(url, {
       params: { ...req.query, key: KEY }
     });
+    // res.send('noice')
     res.json(response.data);
   } catch (error) {
     console.error(`Failed to fetch from RAWG API: ${error}`);
@@ -24,23 +21,19 @@ const fetchFromRawg = async (url, req, res) => {
   }
 };
 
-// platforms
-app.get('/platforms/lists/parents', async (req, res) => {
+app.get('/api/platforms/lists/parents', async (req, res) => {
   await fetchFromRawg('https://api.rawg.io/api/platforms/lists/parents', req, res);
 });
 
-// games
-app.get('/games', async (req, res) => {
+app.get('/api/games', async (req, res) => {
   await fetchFromRawg('https://api.rawg.io/api/games', req, res);
 });
 
-// genres
-app.get('/genres', async (req, res) => {
+app.get('/api/genres', async (req, res) => {
   await fetchFromRawg('https://api.rawg.io/api/genres', req, res);
 });
 
-// Run app
-const port = process.env.PORT || 3000; // Use the PORT environment variable if it exists
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Serving on port ${port}`);
 });
