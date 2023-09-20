@@ -6,7 +6,7 @@ const app = express();
 app.use(cors()); // Enable CORS for all routes
 
 // Ensure the API key is set
-if (!process.env.GAMES_API_KEY) {
+if (!process.env.VITE_GAMES_API_KEY) {
     console.error("Environment variable GAMES_API_KEY is not set");
     process.exit(1);
 }
